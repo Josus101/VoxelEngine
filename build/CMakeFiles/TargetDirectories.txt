@@ -1,0 +1,3 @@
+/Users/jonasreiher/VoxelEngine/build/CMakeFiles/VoxelEngine.dir
+/Users/jonasreiher/VoxelEngine/build/CMakeFiles/edit_cache.dir
+/Users/jonasreiher/VoxelEngine/build/CMakeFiles/rebuild_cache.dir
