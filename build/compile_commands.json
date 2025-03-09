@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/Users/jonasreiher/Side Projects/VoxelEngine/build",
+  "command": "/usr/bin/clang++  -I\"/Users/jonasreiher/Side Projects/VoxelEngine/include\" -isystem /opt/homebrew/include -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks -g -std=gnu++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -mmacosx-version-min=15.0 -o CMakeFiles/voxelengine.dir/src/main.cpp.o -c \"/Users/jonasreiher/Side Projects/VoxelEngine/src/main.cpp\"",
+  "file": "/Users/jonasreiher/Side Projects/VoxelEngine/src/main.cpp",
+  "output": "CMakeFiles/voxelengine.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/jonasreiher/Side Projects/VoxelEngine/build",
+  "command": "/usr/bin/clang++  -I\"/Users/jonasreiher/Side Projects/VoxelEngine/include\" -isystem /opt/homebrew/include -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks -g -std=gnu++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -mmacosx-version-min=15.0 -o CMakeFiles/voxelengine.dir/src/voxel.cpp.o -c \"/Users/jonasreiher/Side Projects/VoxelEngine/src/voxel.cpp\"",
+  "file": "/Users/jonasreiher/Side Projects/VoxelEngine/src/voxel.cpp",
+  "output": "CMakeFiles/voxelengine.dir/src/voxel.cpp.o"
+},
+{
+  "directory": "/Users/jonasreiher/Side Projects/VoxelEngine/build",
+  "command": "/usr/bin/clang  -I\"/Users/jonasreiher/Side Projects/VoxelEngine/include\" -isystem /opt/homebrew/include -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -mmacosx-version-min=15.0 -o CMakeFiles/voxelengine.dir/src/glad.c.o -c \"/Users/jonasreiher/Side Projects/VoxelEngine/src/glad.c\"",
+  "file": "/Users/jonasreiher/Side Projects/VoxelEngine/src/glad.c",
+  "output": "CMakeFiles/voxelengine.dir/src/glad.c.o"
+},
+{
+  "directory": "/Users/jonasreiher/Side Projects/VoxelEngine/build",
+  "command": "/usr/bin/clang++  -I\"/Users/jonasreiher/Side Projects/VoxelEngine/include\" -isystem /opt/homebrew/include -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks -g -std=gnu++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -mmacosx-version-min=15.0 -o CMakeFiles/voxelengine.dir/src/shader.cpp.o -c \"/Users/jonasreiher/Side Projects/VoxelEngine/src/shader.cpp\"",
+  "file": "/Users/jonasreiher/Side Projects/VoxelEngine/src/shader.cpp",
+  "output": "CMakeFiles/voxelengine.dir/src/shader.cpp.o"
+},
+{
+  "directory": "/Users/jonasreiher/Side Projects/VoxelEngine/build",
+  "command": "/usr/bin/clang++  -I\"/Users/jonasreiher/Side Projects/VoxelEngine/include\" -isystem /opt/homebrew/include -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks -g -std=gnu++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -mmacosx-version-min=15.0 -o CMakeFiles/voxelengine.dir/src/camera.cpp.o -c \"/Users/jonasreiher/Side Projects/VoxelEngine/src/camera.cpp\"",
+  "file": "/Users/jonasreiher/Side Projects/VoxelEngine/src/camera.cpp",
+  "output": "CMakeFiles/voxelengine.dir/src/camera.cpp.o"
+}
+]

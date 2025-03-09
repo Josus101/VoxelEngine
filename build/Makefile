@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/jonasreiher/VoxelEngine
+CMAKE_SOURCE_DIR = "/Users/jonasreiher/Side Projects/VoxelEngine"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/jonasreiher/VoxelEngine/build
+CMAKE_BINARY_DIR = "/Users/jonasreiher/Side Projects/VoxelEngine/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jonasreiher/VoxelEngine/build/CMakeFiles /Users/jonasreiher/VoxelEngine/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/jonasreiher/Side Projects/VoxelEngine/build/CMakeFiles" "/Users/jonasreiher/Side Projects/VoxelEngine/build//CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jonasreiher/VoxelEngine/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/jonasreiher/Side Projects/VoxelEngine/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -117,24 +117,72 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named VoxelEngine
+# Target rules for targets named voxelengine
 
 # Build rule for target.
-VoxelEngine: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 VoxelEngine
-.PHONY : VoxelEngine
+voxelengine: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 voxelengine
+.PHONY : voxelengine
 
 # fast build rule for target.
-VoxelEngine/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VoxelEngine.dir/build.make CMakeFiles/VoxelEngine.dir/build
-.PHONY : VoxelEngine/fast
+voxelengine/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/build
+.PHONY : voxelengine/fast
+
+src/camera.o: src/camera.cpp.o
+.PHONY : src/camera.o
+
+# target to build an object file
+src/camera.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/camera.cpp.o
+.PHONY : src/camera.cpp.o
+
+src/camera.i: src/camera.cpp.i
+.PHONY : src/camera.i
+
+# target to preprocess a source file
+src/camera.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/camera.cpp.i
+.PHONY : src/camera.cpp.i
+
+src/camera.s: src/camera.cpp.s
+.PHONY : src/camera.s
+
+# target to generate assembly for a file
+src/camera.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/camera.cpp.s
+.PHONY : src/camera.cpp.s
+
+src/glad.o: src/glad.c.o
+.PHONY : src/glad.o
+
+# target to build an object file
+src/glad.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/glad.c.o
+.PHONY : src/glad.c.o
+
+src/glad.i: src/glad.c.i
+.PHONY : src/glad.i
+
+# target to preprocess a source file
+src/glad.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/glad.c.i
+.PHONY : src/glad.c.i
+
+src/glad.s: src/glad.c.s
+.PHONY : src/glad.s
+
+# target to generate assembly for a file
+src/glad.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/glad.c.s
+.PHONY : src/glad.c.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VoxelEngine.dir/build.make CMakeFiles/VoxelEngine.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -142,7 +190,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VoxelEngine.dir/build.make CMakeFiles/VoxelEngine.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -150,8 +198,56 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VoxelEngine.dir/build.make CMakeFiles/VoxelEngine.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
+
+src/shader.o: src/shader.cpp.o
+.PHONY : src/shader.o
+
+# target to build an object file
+src/shader.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/shader.cpp.o
+.PHONY : src/shader.cpp.o
+
+src/shader.i: src/shader.cpp.i
+.PHONY : src/shader.i
+
+# target to preprocess a source file
+src/shader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/shader.cpp.i
+.PHONY : src/shader.cpp.i
+
+src/shader.s: src/shader.cpp.s
+.PHONY : src/shader.s
+
+# target to generate assembly for a file
+src/shader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/shader.cpp.s
+.PHONY : src/shader.cpp.s
+
+src/voxel.o: src/voxel.cpp.o
+.PHONY : src/voxel.o
+
+# target to build an object file
+src/voxel.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/voxel.cpp.o
+.PHONY : src/voxel.cpp.o
+
+src/voxel.i: src/voxel.cpp.i
+.PHONY : src/voxel.i
+
+# target to preprocess a source file
+src/voxel.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/voxel.cpp.i
+.PHONY : src/voxel.cpp.i
+
+src/voxel.s: src/voxel.cpp.s
+.PHONY : src/voxel.s
+
+# target to generate assembly for a file
+src/voxel.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/voxelengine.dir/build.make CMakeFiles/voxelengine.dir/src/voxel.cpp.s
+.PHONY : src/voxel.cpp.s
 
 # Help Target
 help:
@@ -161,10 +257,22 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... VoxelEngine"
+	@echo "... voxelengine"
+	@echo "... src/camera.o"
+	@echo "... src/camera.i"
+	@echo "... src/camera.s"
+	@echo "... src/glad.o"
+	@echo "... src/glad.i"
+	@echo "... src/glad.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/shader.o"
+	@echo "... src/shader.i"
+	@echo "... src/shader.s"
+	@echo "... src/voxel.o"
+	@echo "... src/voxel.i"
+	@echo "... src/voxel.s"
 .PHONY : help
 
 

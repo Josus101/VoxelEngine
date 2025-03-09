@@ -8,7 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/jonasreiher/VoxelEngine/src/main.cpp" "CMakeFiles/VoxelEngine.dir/src/main.cpp.o" "gcc" "CMakeFiles/VoxelEngine.dir/src/main.cpp.o.d"
+  "/Users/jonasreiher/Side Projects/VoxelEngine/src/glad.c" "CMakeFiles/voxelengine.dir/src/glad.c.o" "gcc" "CMakeFiles/voxelengine.dir/src/glad.c.o.d"
+  "/Users/jonasreiher/Side Projects/VoxelEngine/src/camera.cpp" "CMakeFiles/voxelengine.dir/src/camera.cpp.o" "gcc" "CMakeFiles/voxelengine.dir/src/camera.cpp.o.d"
+  "/Users/jonasreiher/Side Projects/VoxelEngine/src/main.cpp" "CMakeFiles/voxelengine.dir/src/main.cpp.o" "gcc" "CMakeFiles/voxelengine.dir/src/main.cpp.o.d"
+  "/Users/jonasreiher/Side Projects/VoxelEngine/src/shader.cpp" "CMakeFiles/voxelengine.dir/src/shader.cpp.o" "gcc" "CMakeFiles/voxelengine.dir/src/shader.cpp.o.d"
+  "/Users/jonasreiher/Side Projects/VoxelEngine/src/voxel.cpp" "CMakeFiles/voxelengine.dir/src/voxel.cpp.o" "gcc" "CMakeFiles/voxelengine.dir/src/voxel.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
