@@ -10,14 +10,14 @@ private:
     static constexpr GLfloat voxelVertices[48] = {
         // Positions        // Colors
         -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 0: Bottom-left (back)
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  // 1: Bottom-right (back)
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  // 2: Top-right (back)
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  // 3: Top-left (back)
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 1: Bottom-right (back)
+         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 2: Top-right (back)
+        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 3: Top-left (back)
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // 4: Bottom-left (front)
-         0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // 5: Bottom-right (front)
-         0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // 6: Top-right (front)
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f   // 7: Top-left (front)
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 4: Bottom-left (front)
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 5: Bottom-right (front)
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 6: Top-right (front)
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f   // 7: Top-left (front)
     };
 
     static constexpr GLuint voxelIndices[36] = {
