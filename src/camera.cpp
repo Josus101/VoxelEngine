@@ -1,44 +1,68 @@
-#include "camera.hpp"
+#include "../include/camera.hpp"
 
 Camera::Camera(float view_width, float view_height) {
-    viewHeight = view_height;
     viewWidth = view_width;
-
-    cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
+    viewHeight = view_height;
+    cameraPosition = glm::vec3(0.0f, 0.5f, 3.0f);
     cameraRotation = glm::vec3(0.0f, 0.0f, 0.0f);
     cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-
-    cameraDirection = glm::normalize(cameraPosition - cameraTarget);
-
-    cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-    cameraUp = glm::cross(cameraDirection, cameraRight);
-    cameraForward = glm::vec3(0.0f, 0.0f, -1.0f);
     
-    
+    pitch = 0.0f;
+    yaw = -90.0f;
+
+    movementSpeed = 2.5f;
+    mouseSensitivity = 0.1f;
+
+    // Initialize the camera direction
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraForward = glm::normalize(front);
+
+    // also re-calculate the Right and Up vector
+    cameraRight = glm::normalize(glm::cross(cameraForward, up));
+    cameraUp = glm::normalize(glm::cross(cameraRight, cameraForward));
+
+    // Initialize the projection matrix
     projection = glm::perspective(glm::radians(45.0f), viewWidth / viewHeight, 0.1f, 100.0f);
 
+    // Initialize the view matrix
     view = glm::lookAt(
-        cameraPosition, // Camera position
-        cameraPosition + cameraForward,   // Look-at point
-        cameraUp              // Up direction
+        cameraPosition,
+        cameraPosition + cameraForward,
+        cameraUp
     );
+
+    std::cout << "Camera initialized" << std::endl;
 }
 
 
 void Camera::update() {
-    cameraDirection = glm::normalize(cameraPosition - cameraTarget);
+    // calculate the new Front vector
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraForward = glm::normalize(front);
+    if (glm::length(cameraForward) == 0.0f) {
+        cameraForward = glm::vec3(0.0f, 0.0f, -1.0f); // Default forward direction
+    }
+    // also re-calculate the Right and Up vector
+    cameraRight = glm::length(cameraForward) > 0 ? glm::normalize(glm::cross(cameraForward, up)) : glm::vec3(1.0f, 0.0f, 0.0f);
+    cameraUp = glm::length(cameraRight) > 0 ? glm::normalize(glm::cross(cameraRight, cameraForward)) : glm::vec3(0.0f, 1.0f, 0.0f);
 
-    cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-    cameraUp = glm::cross(cameraDirection, cameraRight);
-    // std::cout << "update in camera" << std::endl;
+
+    // Update the view matrix with the new orientation
     view = glm::lookAt(cameraPosition, 
                        cameraPosition + cameraForward, 
                        cameraUp);
 }
 
-void Camera::processInput(GLFWwindow *window) {
-    // std::cout << "Process incput in camera" << std::endl;
-    const float cameraSpeed = 0.05f;
+
+// camera movement - keyboard input
+void Camera::processKeyboardInput(GLFWwindow *window, float deltaTime) {
+    const float cameraSpeed = movementSpeed * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPosition += cameraSpeed * cameraForward;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -47,9 +71,35 @@ void Camera::processInput(GLFWwindow *window) {
         cameraPosition -= glm::normalize(glm::cross(cameraForward, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPosition += glm::normalize(glm::cross(cameraForward, cameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        movementSpeed = 5.0f;  // Run
+    else
+        movementSpeed = 2.5f;  // Walk
+
 
     std::cout << "CamPos: " << cameraPosition.x << ", " << cameraPosition.y << ", " << cameraPosition.z << std::endl;
 }
+
+// camera rotation - mouse input
+void Camera::processMouseInput(float xOffset, float yOffset, GLboolean constrainPitch) {
+    std::cout << "mouse input" << std::endl;
+    xOffset *= mouseSensitivity;
+    yOffset *= mouseSensitivity;
+
+    yaw += xOffset;
+    pitch += yOffset;
+
+    // Constrain the pitch to prevent gimbal lock
+    if (constrainPitch) {
+        if (pitch > 89.0f) pitch = 89.0f;
+        if (pitch < -89.0f) pitch = -89.0f;
+    }
+
+    update();  // Update the camera vectors after changing yaw and pitch
+}
+
+
+
 
 
 // getter functions

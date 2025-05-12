@@ -4,18 +4,49 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
-#include "voxel.hpp"
-#include "shader.hpp"
-#include "camera.hpp"
+#include "../include/voxel.hpp"
+#include "../include/shader.hpp"
+#include "../include/camera.hpp"
 
-#define WIDTH 1920.0f
-#define HEIGHT 1080.0f
+#define WIDTH 600.0f
+#define HEIGHT 400.0f
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+Camera cam(WIDTH, HEIGHT);
+
+Voxel voxel;
+
+float lastX = WIDTH  / 2.0f;
+float lastY = HEIGHT / 2.0f;
+
+GLboolean firstMouse = true;
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+void mouseCallback(GLFWwindow* window, double xposIn, double yposIn) {
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+
+    lastX = xpos;
+    lastY = ypos;
+
+    cam.processMouseInput(xoffset, yoffset);
+}
+
+
+
 int main() {
+    std::cout << "main called" << std::endl;
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW\n";
         return -1;
@@ -34,26 +65,20 @@ int main() {
 
     glfwMakeContextCurrent(window);
 
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetCursorPosCallback(window, mouseCallback);
+
+    // capture the mouse input
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD\n";
         return -1;
     }
 
     glEnable(GL_DEPTH_TEST);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // Camera setup
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), WIDTH / HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = glm::lookAt(
-        glm::vec3(3.0f, 2.0f, 3.0f), // Camera position
-        glm::vec3(0.0f, 0.0f, 0.0f), // Look-at point
-        glm::vec3(0.0f, 1.0f, 0.0f)  // Up direction
-    );
-
-    Voxel voxel;
-    Camera cam(WIDTH, HEIGHT);
-
-    // cam.setPosition(3.0f, 1.0f, 3.0f);
 
     GLuint shaderProgram = createShaderProgram("../include/vertex_shader.glsl", "../include/fragment_shader.glsl");
     GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
@@ -62,12 +87,24 @@ int main() {
 
     bool isWireframe = false;
     bool wKeyPressed = false;  // Tracks W key state
-    
+
+
+    // deltat time variables
+    float deltaTime = 0.0f;
+    float currentFrame = 0.0f;
+    float lastFrame = 0.0f;     
+
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        std::cout << "Deltatime: " << deltaTime << std::endl;
+
         // handle input for camera
-        cam.processInput(window);
+        cam.processKeyboardInput(window, deltaTime);
 
         // update camera values
         cam.update();

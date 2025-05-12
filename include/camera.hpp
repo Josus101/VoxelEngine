@@ -13,8 +13,14 @@ class Camera {
         glm::vec3 cameraRotation;
         glm::vec3 cameraTarget;
 
+        float pitch;
+        float yaw;
+
+        float movementSpeed;
+        float mouseSensitivity;
+
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 cameraDirection = glm::normalize(cameraPosition - cameraTarget);
+        glm::vec3 cameraDirection;
         
         glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
         glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
@@ -24,10 +30,14 @@ class Camera {
         glm::mat4 projection;
         glm::mat4 view;
 
+        // void updateCameraVectors();
+
     public:
         Camera(float view_width, float view_height);
         void update();
-        void processInput(GLFWwindow *window);
+        
+        void processKeyboardInput(GLFWwindow *window, float deltaTime);
+        void processMouseInput(float xoffset, float yoffset, GLboolean constrainPitch = true);
 
 
         // getter functions
