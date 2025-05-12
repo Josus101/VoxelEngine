@@ -11,6 +11,11 @@
 #define WIDTH 1920.0f
 #define HEIGHT 1080.0f
 
+
+std::unique_ptr<Camera> cam;
+std::unique_ptr<Voxel> voxel;
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
@@ -50,10 +55,9 @@ int main() {
         glm::vec3(0.0f, 1.0f, 0.0f)  // Up direction
     );
 
-    Voxel voxel;
-    Camera cam(WIDTH, HEIGHT);
 
-    // cam.setPosition(3.0f, 1.0f, 3.0f);
+    cam = std::make_unique<Camera>(WIDTH, HEIGHT);
+    voxel = std::make_unique<Voxel>();
 
     GLuint shaderProgram = createShaderProgram("../include/vertex_shader.glsl", "../include/fragment_shader.glsl");
     GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
@@ -67,33 +71,50 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // handle input for camera
-        cam.processInput(window);
+        cam->processInput(window);
 
         // update camera values
-        cam.update();
+        cam->update();
 
         // Toggle wireframe mode using 'W' key
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !wKeyPressed) {
+        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !wKeyPressed) {
             isWireframe = !isWireframe;
             wKeyPressed = true;
         }
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
             wKeyPressed = false;
         }
 
-        if (isWireframe) {
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            voxel->rotateBy(0.0f, -1.0f, 0.0f);  // Rotate left around Y-axis
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            voxel->rotateBy(0.0f, 1.0f, 0.0f);   // Rotate right around Y-axis
+        }
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            voxel->rotateBy(-1.0f, 0.0f, 0.0f);  // Rotate up around X-axis
+        }
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            voxel->rotateBy(1.0f, 0.0f, 0.0f);   // Rotate down around X-axis
+        }
+
+
+
+        if(isWireframe) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Wireframe mode
         } else {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Solid mode
         }
 
-        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 model = voxel->getModelMatrix();
         glUseProgram(shaderProgram);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cam.getView()));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam.getProjection()));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cam->getView()));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam->getProjection()));
 
-        voxel.render();
+
+        voxel->render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
