@@ -34,12 +34,13 @@ Camera::Camera(float view_width, float view_height) {
         cameraUp
     );
 
-    std::cout << "Camera initialized" << std::endl;
+    // std::cout << "Camera initialized" << std::endl;
 }
 
 
 void Camera::update() {
     // calculate the new Front vector
+    // std::cout << "camerea update" << std::endl;
     glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
@@ -62,6 +63,7 @@ void Camera::update() {
 
 // camera movement - keyboard input
 void Camera::processKeyboardInput(GLFWwindow *window, float deltaTime) {
+    // std::cout << "Keyboard input" << std::endl;
     const float cameraSpeed = movementSpeed * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPosition += cameraSpeed * cameraForward;
@@ -77,12 +79,12 @@ void Camera::processKeyboardInput(GLFWwindow *window, float deltaTime) {
         movementSpeed = 2.5f;  // Walk
 
 
-    std::cout << "CamPos: " << cameraPosition.x << ", " << cameraPosition.y << ", " << cameraPosition.z << std::endl;
+    // std::cout << "CamPos: " << cameraPosition.x << ", " << cameraPosition.y << ", " << cameraPosition.z << std::endl;
 }
 
 // camera rotation - mouse input
 void Camera::processMouseInput(float xOffset, float yOffset, GLboolean constrainPitch) {
-    std::cout << "mouse input" << std::endl;
+    // std::cout << "mouse input" << std::endl;
     xOffset *= mouseSensitivity;
     yOffset *= mouseSensitivity;
 

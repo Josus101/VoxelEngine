@@ -8,23 +8,27 @@
 #include "../include/shader.hpp"
 #include "../include/camera.hpp"
 
-#define WIDTH 600.0f
-#define HEIGHT 400.0f
-
-Camera cam(WIDTH, HEIGHT);
-
-Voxel voxel;
+#define WIDTH 1920.0f
+#define HEIGHT 1080.0f
 
 float lastX = WIDTH  / 2.0f;
 float lastY = HEIGHT / 2.0f;
 
 GLboolean firstMouse = true;
+static bool mouseLocked = true;
+
+
+std::unique_ptr<Camera> cam;
+std::unique_ptr<Voxel> voxel;
+
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
 void mouseCallback(GLFWwindow* window, double xposIn, double yposIn) {
+    if(!mouseLocked) return;
+
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -40,13 +44,13 @@ void mouseCallback(GLFWwindow* window, double xposIn, double yposIn) {
     lastX = xpos;
     lastY = ypos;
 
-    cam.processMouseInput(xoffset, yoffset);
+    cam->processMouseInput(xoffset, yoffset);
 }
 
 
 
 int main() {
-    std::cout << "main called" << std::endl;
+    // std::cout << "main called" << std::endl;
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW\n";
         return -1;
@@ -68,9 +72,8 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetCursorPosCallback(window, mouseCallback);
 
-    // capture the mouse input
+    // Capture the mouse input
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD\n";
@@ -79,6 +82,9 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
+    // Initialize the camera and voxel after OpenGL context is ready
+    cam = std::make_unique<Camera>(WIDTH, HEIGHT);
+    voxel = std::make_unique<Voxel>();
 
     GLuint shaderProgram = createShaderProgram("../include/vertex_shader.glsl", "../include/fragment_shader.glsl");
     GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
@@ -86,13 +92,11 @@ int main() {
     GLuint projLoc = glGetUniformLocation(shaderProgram, "projection");
 
     bool isWireframe = false;
-    bool wKeyPressed = false;  // Tracks W key state
+    bool wKeyPressed = false;
 
-
-    // deltat time variables
     float deltaTime = 0.0f;
     float currentFrame = 0.0f;
-    float lastFrame = 0.0f;     
+    float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -101,22 +105,42 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        std::cout << "Deltatime: " << deltaTime << std::endl;
+        // std::cout << "fps: " << 1/deltaTime << std::endl;
 
-        // handle input for camera
-        cam.processKeyboardInput(window, deltaTime);
+        // Handle input for camera
+        cam->processKeyboardInput(window, deltaTime);
 
-        // update camera values
-        cam.update();
+        // Update camera values
+        cam->update();
+        
+
+    
 
         // Toggle wireframe mode using 'W' key
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !wKeyPressed) {
+        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !wKeyPressed) {
             isWireframe = !isWireframe;
             wKeyPressed = true;
         }
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
             wKeyPressed = false;
         }
+
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
+            if (mouseLocked) {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                std::cout << "Free mouse" << std::endl;
+            } else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                std::cout << "Lock mouse" << std::endl;
+                firstMouse = true;
+            }
+            mouseLocked = !mouseLocked;
+            // Add a small delay to prevent multiple toggles per press
+            glfwWaitEventsTimeout(0.1); 
+        }
+
+
 
         if (isWireframe) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Wireframe mode
@@ -124,20 +148,20 @@ int main() {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Solid mode
         }
 
-        glm::mat4 model = glm::mat4(1.0f);
+        // Set the shader program
         glUseProgram(shaderProgram);
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cam.getView()));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam.getProjection()));
 
-        voxel.render();
+        // Update model, view, and projection matrices
+        glm::mat4 model = voxel->getModelMatrix();
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cam->getView()));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam->getProjection()));
+
+        voxel->render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-
-
 
     glfwTerminate();
     return 0;

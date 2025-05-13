@@ -2,10 +2,16 @@
 #define VOXEL_HPP
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class Voxel {
 private:
     GLuint VAO, VBO, EBO; // OpenGL buffers
+    glm::mat4 modelMatrix; // Model transformation matrix
+    glm::vec3 rotation;    // Rotation vector (x, y, z)
+
+    void updateModelMatrix();
 
     static constexpr GLfloat voxelVertices[48] = {
         // Positions        // Colors
@@ -33,6 +39,8 @@ public:
     Voxel();
     ~Voxel();
     void render();
+    void rotateBy(float x, float y, float z);  // Rotation function
+    glm::mat4 getModelMatrix() const;
 };
 
 #endif // VOXEL_HPP
