@@ -65,14 +65,24 @@ void Camera::update() {
 void Camera::processKeyboardInput(GLFWwindow *window, float deltaTime) {
     // std::cout << "Keyboard input" << std::endl;
     const float cameraSpeed = movementSpeed * deltaTime;
+    // WASD
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPosition += cameraSpeed * cameraForward;
+        cameraPosition -= glm::normalize(glm::cross(cameraRight, glm::vec3(0.0f, 1.0f, 0.0f))) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPosition -= cameraSpeed * cameraForward;
+        cameraPosition += glm::normalize(glm::cross(cameraRight, glm::vec3(0.0f, 1.0f, 0.0f))) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         cameraPosition -= glm::normalize(glm::cross(cameraForward, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPosition += glm::normalize(glm::cross(cameraForward, cameraUp)) * cameraSpeed;
+
+    // UP and DOWN
+    if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        cameraPosition += glm::vec3(0.0f, 1.0f, 0.0f) * cameraSpeed;
+    if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        cameraPosition -= glm::vec3(0.0f, 1.0f, 0.0f) * cameraSpeed;
+    
+
+    // Sprint
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         movementSpeed = 5.0f;  // Run
     else

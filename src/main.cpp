@@ -117,11 +117,11 @@ int main() {
     
 
         // Toggle wireframe mode using 'W' key
-        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !wKeyPressed) {
+        if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && !wKeyPressed) {
             isWireframe = !isWireframe;
             wKeyPressed = true;
         }
-        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+        if(glfwGetKey(window, GLFW_KEY_M) == GLFW_RELEASE) {
             wKeyPressed = false;
         }
 
@@ -129,10 +129,8 @@ int main() {
         if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
             if (mouseLocked) {
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-                std::cout << "Free mouse" << std::endl;
             } else {
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-                std::cout << "Lock mouse" << std::endl;
                 firstMouse = true;
             }
             mouseLocked = !mouseLocked;
