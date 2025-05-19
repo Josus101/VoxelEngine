@@ -19,8 +19,7 @@ static bool mouseLocked = true;
 
 
 std::unique_ptr<Camera> cam;
-std::unique_ptr<Voxel> voxel;
-
+std::vector<std::unique_ptr<Voxel>> voxels;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -84,7 +83,15 @@ int main() {
 
     // Initialize the camera and voxel after OpenGL context is ready
     cam = std::make_unique<Camera>(WIDTH, HEIGHT);
-    voxel = std::make_unique<Voxel>();
+
+    float spacing = 1.1f;
+    int gridSize = 5;
+    for (int x = 0; x < gridSize; x++) {
+        for (int z = 0; z < gridSize; z++) {
+            glm::vec3 pos(x * spacing, 0.0f, z * spacing);
+            voxels.push_back(std::make_unique<Voxel>(pos, glm::vec3(0.0f), glm::vec3(46.0f, 158.0f, 24.0f)));
+        }
+    }
 
     GLuint shaderProgram = createShaderProgram("../include/vertex_shader.glsl", "../include/fragment_shader.glsl");
     GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
@@ -97,6 +104,9 @@ int main() {
     float deltaTime = 0.0f;
     float currentFrame = 0.0f;
     float lastFrame = 0.0f;
+
+
+    glClearColor(15.0f / 255.0f, 68.0f / 255.0f, 191.0f / 255.0f, 1.0f);
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -148,14 +158,16 @@ int main() {
 
         // Set the shader program
         glUseProgram(shaderProgram);
-
         // Update model, view, and projection matrices
-        glm::mat4 model = voxel->getModelMatrix();
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cam->getView()));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam->getProjection()));
 
-        voxel->render();
+        // Render the voxels
+        for (auto& voxel : voxels) {
+            glm::mat4 model = voxel->getModelMatrix();
+            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+            voxel->render();
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

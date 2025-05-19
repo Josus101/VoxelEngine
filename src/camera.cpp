@@ -3,9 +3,9 @@
 Camera::Camera(float view_width, float view_height) {
     viewWidth = view_width;
     viewHeight = view_height;
-    cameraPosition = glm::vec3(0.0f, 0.5f, 3.0f);
+    cameraPosition = glm::vec3(5.0f, 5.0f, 15.0f);
     cameraRotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    cameraTarget = glm::vec3(2.5f, 0.0f, 2.5f);
     
     pitch = 0.0f;
     yaw = -90.0f;

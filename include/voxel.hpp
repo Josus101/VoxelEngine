@@ -7,13 +7,16 @@
 
 class Voxel {
 private:
-    GLuint VAO, VBO, EBO; // OpenGL buffers
-    glm::mat4 modelMatrix; // Model transformation matrix
-    glm::vec3 rotation;    // Rotation vector (x, y, z)
+    GLuint VAO, VBO, EBO;
+    glm::mat4 modelMatrix;
+    glm::vec3 position;
+    glm::vec3 rotation;
+    glm::vec3 color;
 
     void updateModelMatrix();
+    void updateVertexColors();
 
-    static constexpr GLfloat voxelVertices[48] = {
+    GLfloat voxelVertices[48] = {
         // Positions        // Colors
         -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 0: Bottom-left (back)
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 1: Bottom-right (back)
@@ -37,9 +40,13 @@ private:
 
 public:
     Voxel();
+    Voxel(glm::vec3 pos, glm::vec3 color = {0.1f, 0.72f, 0.0f});
+    Voxel(glm::vec3 pos, glm::vec3 rot, glm::vec3 color = {0.1f, 0.72f, 0.0f}) ;
     ~Voxel();
     void render();
-    void rotateBy(float x, float y, float z);  // Rotation function
+    void rotateBy(float x, float y, float z);
+    void setPosition(glm::vec3 newPoition);
+    void setColor(glm::vec3 newColor);
     glm::mat4 getModelMatrix() const;
 };
 

@@ -1,8 +1,19 @@
 #include "voxel.hpp"
 #include <iostream>
 
-Voxel::Voxel() : rotation(0.0f, 0.0f, 0.0f) {
-    // Initialize model matrix as an identity matrix
+Voxel::Voxel() 
+    : Voxel(glm::vec3(0.0f, 0.0f, 0.0f)) {}
+
+Voxel::Voxel(glm::vec3 pos, glm::vec3 color) 
+    : Voxel(pos,glm::vec3(0.0f, 0.0f, 0.0f), color) {}
+
+Voxel::Voxel(glm::vec3 pos, glm::vec3 rot, glm::vec3 color) 
+    : position(pos), rotation(rot), color(color) {
+
+    updateModelMatrix();
+    updateVertexColors();
+
+     // Initialize model matrix as an identity matrix
     modelMatrix = glm::mat4(1.0f);
 
     glGenVertexArrays(1, &VAO);
@@ -37,23 +48,48 @@ Voxel::~Voxel() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Voxel::rotateBy(float x, float y, float z) {
-    rotation += glm::vec3(x, y, z);  // Update rotation vector
-    updateModelMatrix();
-}
-
 void Voxel::updateModelMatrix() {
-    // Start with the identity matrix
     modelMatrix = glm::mat4(1.0f);
-
+    // Apply translation first
+    modelMatrix = glm::translate(modelMatrix, position);
     // Apply rotations around x, y, and z axes
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
+
+void Voxel::updateVertexColors() {
+    for (int i = 0; i < 8; ++i) {
+        voxelVertices[i * 6 + 3] = color.r / 255;
+        voxelVertices[i * 6 + 4] = color.g / 255;
+        voxelVertices[i * 6 + 5] = color.b / 255;
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(voxelVertices), voxelVertices);
+}
+
+// getters
 glm::mat4 Voxel::getModelMatrix() const {
     return modelMatrix;
+}
+
+
+// setters
+void Voxel::setPosition(glm::vec3 newPoition) {
+    position = newPoition;
+    updateModelMatrix();
+}
+
+void Voxel::setColor(glm::vec3 newColor) {
+    color = newColor;
+    updateVertexColors();
+}
+
+void Voxel::rotateBy(float x, float y, float z) {
+    rotation += glm::vec3(x, y, z);  // Update rotation vector
+    updateModelMatrix();
 }
 
 void Voxel::render() {
