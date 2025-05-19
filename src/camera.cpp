@@ -46,7 +46,7 @@ void Camera::update() {
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraForward = glm::normalize(front);
-    if (glm::length(cameraForward) == 0.0f) {
+    if(glm::length(cameraForward) == 0.0f) {
         cameraForward = glm::vec3(0.0f, 0.0f, -1.0f); // Default forward direction
     }
     // also re-calculate the Right and Up vector
@@ -66,13 +66,13 @@ void Camera::processKeyboardInput(GLFWwindow *window, float deltaTime) {
     // std::cout << "Keyboard input" << std::endl;
     const float cameraSpeed = movementSpeed * deltaTime;
     // WASD
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPosition -= glm::normalize(glm::cross(cameraRight, glm::vec3(0.0f, 1.0f, 0.0f))) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         cameraPosition += glm::normalize(glm::cross(cameraRight, glm::vec3(0.0f, 1.0f, 0.0f))) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         cameraPosition -= glm::normalize(glm::cross(cameraForward, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPosition += glm::normalize(glm::cross(cameraForward, cameraUp)) * cameraSpeed;
 
     // UP and DOWN
@@ -83,11 +83,11 @@ void Camera::processKeyboardInput(GLFWwindow *window, float deltaTime) {
     
 
     // Sprint
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
         movementSpeed = 5.0f;  // Run
-    else
+    } else  {
         movementSpeed = 2.5f;  // Walk
-
+    }
 
     // std::cout << "CamPos: " << cameraPosition.x << ", " << cameraPosition.y << ", " << cameraPosition.z << std::endl;
 }
@@ -102,7 +102,7 @@ void Camera::processMouseInput(float xOffset, float yOffset, GLboolean constrain
     pitch += yOffset;
 
     // Constrain the pitch to prevent gimbal lock
-    if (constrainPitch) {
+    if(constrainPitch) {
         if (pitch > 89.0f) pitch = 89.0f;
         if (pitch < -89.0f) pitch = -89.0f;
     }

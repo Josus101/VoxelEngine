@@ -16,18 +16,20 @@ private:
     void updateModelMatrix();
     void updateVertexColors();
 
-    GLfloat voxelVertices[48] = {
-        // Positions        // Colors
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 0: Bottom-left (back)
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 1: Bottom-right (back)
-         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 2: Top-right (back)
-        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 3: Top-left (back)
+    // GLfloat voxelVertices[48] = {
+    //     // Positions        // Colors
+    //     -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 0: Bottom-left (back)
+    //      0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 1: Bottom-right (back)
+    //      0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 2: Top-right (back)
+    //     -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 3: Top-left (back)
 
-        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 4: Bottom-left (front)
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 5: Bottom-right (front)
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 6: Top-right (front)
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f   // 7: Top-left (front)
-    };
+    //     -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 4: Bottom-left (front)
+    //      0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 5: Bottom-right (front)
+    //      0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 6: Top-right (front)
+    //     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f   // 7: Top-left (front)
+    // };
+
+    static GLfloat voxelVertices[48];
 
     static constexpr GLuint voxelIndices[36] = {
         0, 1, 2,  2, 3, 0,  // Back face
@@ -40,14 +42,18 @@ private:
 
 public:
     Voxel();
-    Voxel(glm::vec3 pos, glm::vec3 color = {0.1f, 0.72f, 0.0f});
-    Voxel(glm::vec3 pos, glm::vec3 rot, glm::vec3 color = {0.1f, 0.72f, 0.0f}) ;
+    Voxel(glm::vec3 pos, glm::vec3 color = {46.0f, 158.0f, 24.0f});
+    Voxel(glm::vec3 pos, glm::vec3 rot, glm::vec3 color = {46.0f, 158.0f, 24.0f}) ;
     ~Voxel();
-    void render();
+    void initialize();
+    void render(GLuint shaderProgram);
     void rotateBy(float x, float y, float z);
     void setPosition(glm::vec3 newPoition);
     void setColor(glm::vec3 newColor);
     glm::mat4 getModelMatrix() const;
+    glm::vec3 getPosition() const;
+    glm::vec3 getRotation() const;
+    glm::vec3 getColor() const;
 };
 
 #endif // VOXEL_HPP

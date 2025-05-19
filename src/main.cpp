@@ -84,17 +84,23 @@ int main() {
     // Initialize the camera and voxel after OpenGL context is ready
     cam = std::make_unique<Camera>(WIDTH, HEIGHT);
 
-    float spacing = 1.1f;
-    int gridSize = 5;
+    int gridSize = 10;
+    float spacing = 1.0f;
     for (int x = 0; x < gridSize; x++) {
-        for (int z = 0; z < gridSize; z++) {
-            glm::vec3 pos(x * spacing, 0.0f, z * spacing);
-            voxels.push_back(std::make_unique<Voxel>(pos, glm::vec3(0.0f), glm::vec3(46.0f, 158.0f, 24.0f)));
+        for (int y = 0; y < 2; y++) {
+            for (int z = 0; z < gridSize; z++) {
+                glm::vec3 pos(x * spacing, y * spacing, z * spacing);
+                // std::cout << "Voxel Position: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
+                voxels.push_back(std::make_unique<Voxel>(pos, glm::vec3(0.0f), glm::vec3(46.0f, 158.0f, 24.0f)));
+            }
         }
     }
 
     GLuint shaderProgram = createShaderProgram("../include/vertex_shader.glsl", "../include/fragment_shader.glsl");
     GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
+    if (modelLoc == -1) {
+        std::cerr << "Error: modelMatrix uniform not found in shader!" << std::endl;
+    }
     GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
     GLuint projLoc = glGetUniformLocation(shaderProgram, "projection");
 
@@ -135,26 +141,27 @@ int main() {
             wKeyPressed = false;
         }
 
+        if (isWireframe) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Wireframe mode
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Solid mode
+        }
 
-        if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
+        // Toggle locked/free mouse
+        if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) { 
             if (mouseLocked) {
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             } else {
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 firstMouse = true;
             }
-            mouseLocked = !mouseLocked;
+            mouseLocked = !mouseLocked; 
             // Add a small delay to prevent multiple toggles per press
-            glfwWaitEventsTimeout(0.1); 
+            glfwWaitEventsTimeout(0.2); 
         }
 
 
-
-        if (isWireframe) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Wireframe mode
-        } else {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Solid mode
-        }
+        
 
         // Set the shader program
         glUseProgram(shaderProgram);
@@ -162,12 +169,19 @@ int main() {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cam->getView()));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam->getProjection()));
 
-        // Render the voxels
         for (auto& voxel : voxels) {
+            // Update the model matrix uniform for each voxel
             glm::mat4 model = voxel->getModelMatrix();
-            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-            voxel->render();
+            for (int i = 0; i < 4; ++i) {
+                std::cout << model[i][0] << " " << model[i][1] << " " << model[i][2] << " " << model[i][3] << "\n";
+            }            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+            glm::vec3 pos = voxel->getPosition();
+            std::cout << "Voxel pos: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
+
+            // Render voxel
+            voxel->render(shaderProgram);
         }
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -1,5 +1,19 @@
 #include "voxel.hpp"
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+
+GLfloat Voxel::voxelVertices[48] = {
+        // Positions        // Colors
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 0: Bottom-left (back)
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 1: Bottom-right (back)
+         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 2: Top-right (back)
+        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 3: Top-left (back)
+
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 4: Bottom-left (front)
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 5: Bottom-right (front)
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 6: Top-right (front)
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f   // 7: Top-left (front)
+    };
 
 Voxel::Voxel() 
     : Voxel(glm::vec3(0.0f, 0.0f, 0.0f)) {}
@@ -7,14 +21,17 @@ Voxel::Voxel()
 Voxel::Voxel(glm::vec3 pos, glm::vec3 color) 
     : Voxel(pos,glm::vec3(0.0f, 0.0f, 0.0f), color) {}
 
-Voxel::Voxel(glm::vec3 pos, glm::vec3 rot, glm::vec3 color) 
-    : position(pos), rotation(rot), color(color) {
+Voxel::Voxel(glm::vec3 position, glm::vec3 rotation, glm::vec3 color) 
+    : position(position), rotation(rotation), color(color) {
+
+    // Initialize model matrix as an identity matrix
+    modelMatrix = glm::mat4(1.0f);
+
+    // Set the initial position and update the model matrix
+    setPosition(position);
 
     updateModelMatrix();
     updateVertexColors();
-
-     // Initialize model matrix as an identity matrix
-    modelMatrix = glm::mat4(1.0f);
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -48,6 +65,7 @@ Voxel::~Voxel() {
     glDeleteBuffers(1, &EBO);
 }
 
+
 void Voxel::updateModelMatrix() {
     modelMatrix = glm::mat4(1.0f);
     // Apply translation first
@@ -56,11 +74,17 @@ void Voxel::updateModelMatrix() {
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    // std::cout << "Model Matrix for voxel at position (" << position.x << ", " << position.y << ", " << position.z << "):\n";
+    for(int i = 0; i < 4; ++i) {
+        std::cout << modelMatrix[i][0] << " " << modelMatrix[i][1] << " " 
+                  << modelMatrix[i][2] << " " << modelMatrix[i][3] << "\n";
+    }
 }
 
 
 void Voxel::updateVertexColors() {
-    for (int i = 0; i < 8; ++i) {
+    for(int i = 0; i < 8; ++i) {
         voxelVertices[i * 6 + 3] = color.r / 255;
         voxelVertices[i * 6 + 4] = color.g / 255;
         voxelVertices[i * 6 + 5] = color.b / 255;
@@ -75,6 +99,17 @@ glm::mat4 Voxel::getModelMatrix() const {
     return modelMatrix;
 }
 
+glm::vec3 Voxel::getPosition() const {
+    return position;
+}
+
+glm::vec3 Voxel::getRotation() const {
+    return rotation;
+}
+
+glm::vec3 Voxel::getColor() const {
+    return color;
+}
 
 // setters
 void Voxel::setPosition(glm::vec3 newPoition) {
@@ -92,7 +127,11 @@ void Voxel::rotateBy(float x, float y, float z) {
     updateModelMatrix();
 }
 
-void Voxel::render() {
+void Voxel::render(GLuint shaderProgram) {
+    GLint modelLoc = glGetUniformLocation(shaderProgram, "modelMatrix");
+
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
