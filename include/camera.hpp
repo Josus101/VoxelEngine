@@ -44,8 +44,12 @@ class Camera {
         glm::vec3 getPosition();
         glm::vec3 getRotation();
 
+        glm::vec3 getCameraForward();
+
         glm::mat4 getView();
         glm::mat4 getProjection();
+
+    
 
         
         // setter funcitons

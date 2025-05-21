@@ -76,10 +76,10 @@ void Voxel::updateModelMatrix() {
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // std::cout << "Model Matrix for voxel at position (" << position.x << ", " << position.y << ", " << position.z << "):\n";
-    for(int i = 0; i < 4; ++i) {
-        std::cout << modelMatrix[i][0] << " " << modelMatrix[i][1] << " " 
-                  << modelMatrix[i][2] << " " << modelMatrix[i][3] << "\n";
-    }
+    // for(int i = 0; i < 4; ++i) {
+    //     std::cout << modelMatrix[i][0] << " " << modelMatrix[i][1] << " " 
+    //               << modelMatrix[i][2] << " " << modelMatrix[i][3] << "\n";
+    // }
 }
 
 
@@ -127,12 +127,44 @@ void Voxel::rotateBy(float x, float y, float z) {
     updateModelMatrix();
 }
 
-void Voxel::render(GLuint shaderProgram) {
+// void Voxel::render(GLuint shaderProgram, const glm::vec3& cameraForward) {
+//     GLint modelLoc = glGetUniformLocation(shaderProgram, "modelMatrix");
+
+//     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+//     for(int i = 0; i < 6; i++) {
+//         float dotProduct = glm::dot(NORMALS[i], cameraForward);
+//         if(dotProduct < 0) {
+//             glBindVertexArray(VAO);
+//             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(i * 6 * sizeof(GLuint)));
+//             glBindVertexArray(0);
+//         }
+//     }
+// }
+
+void Voxel::render(GLuint shaderProgram, const glm::vec3& cameraForward) {
     GLint modelLoc = glGetUniformLocation(shaderProgram, "modelMatrix");
 
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    // Calculate the world space position of the voxel center
+    glm::vec4 worldPos = modelMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    glm::vec3 voxelToCamera = glm::vec3(worldPos) - cameraForward;
+
+    // Check each face normal in world space
+    for (int i = 0; i < 6; ++i) {
+        // Transform the local normal to world space using the model matrix
+        glm::vec3 worldNormal = glm::normalize(glm::vec3(modelMatrix * glm::vec4(NORMALS[i], 0.0f)));
+
+        // Dot product between transformed normal and vector to camera
+        float dotProduct = glm::dot(worldNormal, voxelToCamera);
+
+        // Render only if the face is visible (dot product < 0)
+        if (dotProduct < 0) {
+            glBindVertexArray(VAO);
+            // Each face consists of 6 vertices (2 triangles)
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(i * 6 * sizeof(GLuint)));
+            glBindVertexArray(0);
+        }
+    }
 }

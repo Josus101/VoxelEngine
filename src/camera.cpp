@@ -132,6 +132,10 @@ glm::mat4 Camera::getProjection() {
     return projection;
 }
 
+glm::vec3 Camera::getCameraForward() {
+    return cameraForward;
+}
+
 
 // setter functions
 

@@ -40,13 +40,22 @@ private:
         0, 4, 5,  5, 1, 0   // Bottom face
     };
 
+    static constexpr glm::vec3 NORMALS[6] = {
+        glm::vec3( 0.0f,  1.0f,  0.0f), // Y+
+        glm::vec3( 0.0f, -1.0f,  0.0f), // Y-
+        glm::vec3( 1.0f,  0.0f,  0.0f), // X+
+        glm::vec3(-1.0f,  0.0f,  0.0f), // X-
+        glm::vec3( 0.0f,  0.0f,  1.0f), // Z+
+        glm::vec3( 0.0f,  0.0f, -1.0f)  // Z-
+    };
+
 public:
     Voxel();
     Voxel(glm::vec3 pos, glm::vec3 color = {46.0f, 158.0f, 24.0f});
     Voxel(glm::vec3 pos, glm::vec3 rot, glm::vec3 color = {46.0f, 158.0f, 24.0f}) ;
     ~Voxel();
     void initialize();
-    void render(GLuint shaderProgram);
+    void render(GLuint shaderProgram, const glm::vec3& cameraForward);
     void rotateBy(float x, float y, float z);
     void setPosition(glm::vec3 newPoition);
     void setColor(glm::vec3 newColor);

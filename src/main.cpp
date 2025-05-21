@@ -80,6 +80,9 @@ int main() {
     }
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);  // Cull back-facing polygons
+    glFrontFace(GL_CCW);  // Counter-clockwise vertices define the front face
 
     // Initialize the camera and voxel after OpenGL context is ready
     cam = std::make_unique<Camera>(WIDTH, HEIGHT);
@@ -172,14 +175,15 @@ int main() {
         for (auto& voxel : voxels) {
             // Update the model matrix uniform for each voxel
             glm::mat4 model = voxel->getModelMatrix();
-            for (int i = 0; i < 4; ++i) {
-                std::cout << model[i][0] << " " << model[i][1] << " " << model[i][2] << " " << model[i][3] << "\n";
-            }            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+            // for (int i = 0; i < 4; ++i) {
+            //     std::cout << model[i][0] << " " << model[i][1] << " " << model[i][2] << " " << model[i][3] << "\n";
+            // }            
+            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
             glm::vec3 pos = voxel->getPosition();
             std::cout << "Voxel pos: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
 
             // Render voxel
-            voxel->render(shaderProgram);
+            voxel->render(shaderProgram, cam->getCameraForward());
         }
 
 
