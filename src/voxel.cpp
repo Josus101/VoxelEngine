@@ -3,16 +3,17 @@
 #include <iostream>
 
 GLfloat Voxel::voxelVertices[48] = {
-        // Positions        // Colors
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 0: Bottom-left (back)
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 1: Bottom-right (back)
-         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 2: Top-right (back)
-        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 3: Top-left (back)
+        // Positions          // Colors
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 0: Top-right (front)
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 1: Bottom-right (front)
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 2: Bottom-left (front)
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   // 3: Top-left (front)
 
-        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 4: Bottom-left (front)
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 5: Bottom-right (front)
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  // 6: Top-right (front)
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f   // 7: Top-left (front)
+        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 4: Top-left (back)
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 5: Bottom-left (back)
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  // 6: Bottom-right (back)
+         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f  // 7: Top-right (back)
+
     };
 
 Voxel::Voxel() 
@@ -39,19 +40,19 @@ Voxel::Voxel(glm::vec3 position, glm::vec3 rotation, glm::vec3 color)
 
     glBindVertexArray(VAO);
 
-    // Vertex Buffer
+    // vertex buffer
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(voxelVertices), voxelVertices, GL_STATIC_DRAW);
 
-    // Element Buffer (Index Buffer)
+    // indec buffer
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(voxelIndices), voxelIndices, GL_STATIC_DRAW);
 
-    // Position Attribute
+    // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
-    // Color Attribute
+    // color attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
 
@@ -68,18 +69,18 @@ Voxel::~Voxel() {
 
 void Voxel::updateModelMatrix() {
     modelMatrix = glm::mat4(1.0f);
-    // Apply translation first
+
     modelMatrix = glm::translate(modelMatrix, position);
-    // Apply rotations around x, y, and z axes
+
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // std::cout << "Model Matrix for voxel at position (" << position.x << ", " << position.y << ", " << position.z << "):\n";
-    for(int i = 0; i < 4; ++i) {
-        std::cout << modelMatrix[i][0] << " " << modelMatrix[i][1] << " " 
-                  << modelMatrix[i][2] << " " << modelMatrix[i][3] << "\n";
-    }
+    // for(int i = 0; i < 4; ++i) {
+    //     std::cout << modelMatrix[i][0] << " " << modelMatrix[i][1] << " " 
+    //               << modelMatrix[i][2] << " " << modelMatrix[i][3] << "\n";
+    // }
 }
 
 
@@ -94,7 +95,7 @@ void Voxel::updateVertexColors() {
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(voxelVertices), voxelVertices);
 }
 
-// getters
+
 glm::mat4 Voxel::getModelMatrix() const {
     return modelMatrix;
 }
@@ -111,7 +112,7 @@ glm::vec3 Voxel::getColor() const {
     return color;
 }
 
-// setters
+
 void Voxel::setPosition(glm::vec3 newPoition) {
     position = newPoition;
     updateModelMatrix();

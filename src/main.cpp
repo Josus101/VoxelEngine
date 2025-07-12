@@ -71,7 +71,7 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetCursorPosCallback(window, mouseCallback);
 
-    // Capture the mouse input
+    
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -80,8 +80,8 @@ int main() {
     }
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE); 
 
-    // Initialize the camera and voxel after OpenGL context is ready
     cam = std::make_unique<Camera>(WIDTH, HEIGHT);
 
     int gridSize = 10;
@@ -132,7 +132,7 @@ int main() {
 
     
 
-        // Toggle wireframe mode using 'W' key
+        // Toggle wireframe mode using 'M' key
         if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && !wKeyPressed) {
             isWireframe = !isWireframe;
             wKeyPressed = true;
